@@ -1,0 +1,129 @@
+FUNCTION_BLOCK fuzzyModel
+// part 1
+VAR_INPUT
+    amountOfWater : REAL;
+    amountOfWheatSeed : REAL;
+    amountOfSunnyHours : REAL;
+END_VAR
+
+//part 2
+VAR_OUTPUT
+    resultingWheat : REAL;
+END_VAR
+
+//fuzzification part 3
+
+//amountOfWater -- TON
+FUZZIFY amountOfWater
+    TERM low := (0,0) (10000,1) (19000,0);
+    TERM med := (15000,0) (25000,1) (40000,0);
+    TERM high := (35000,0) (45000,1) (70000,0);
+    TERM veryHigh := (60000,0) (70000,1) (80000,1);
+
+END_FUZZIFY
+
+//amountOfWheatSeed -- KG
+FUZZIFY amountOfWheatSeed
+    TERM low := (0,0) (4,1) (12,0);
+    TERM med := (8,0) (16,1) (20,0);
+    TERM high := (18,0) (24,1) (28,0);
+    TERM veryHigh := (26,0) (30,1) (36,1);
+END_FUZZIFY
+
+//amountOfSunnyHours -- HOURS
+FUZZIFY amountOfSunnyHours
+    TERM low := (0,0) (600,1) (1200,0);
+    TERM med := (1000,0) (1600,1) (2000,0);
+    TERM high := (1800,0) (2400,1) (2800,1);
+END_FUZZIFY
+
+//defuzzification part 4
+
+//resultingWheat -- TON
+DEFUZZIFY resultingWheat
+    TERM low := (0,1) (10,1) (15,0);
+    TERM med := (8,0) (25,1) (45,0);
+    TERM high := (35,0) (50,1) (65,0);
+    TERM veryHigh := (55,0) (65,1) (80,1);
+    
+// part 5
+    METHOD : COG;
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+// part 6
+RULEBLOCK ruleBlock1
+    AND  : MIN;
+    ACT  : MIN;
+    ACCU : MAX;
+
+    RULE 1: IF amountOfWater IS low AND amountOfWheatSeed IS low AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 2: IF amountOfWater IS low AND amountOfWheatSeed IS low AND amountOfSunnyHours IS med THEN resultingWheat IS low;
+    RULE 3: IF amountOfWater IS low AND amountOfWheatSeed IS low AND amountOfSunnyHours IS high THEN resultingWheat IS low;
+
+    RULE 4: IF amountOfWater IS low AND amountOfWheatSeed IS med AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 5: IF amountOfWater IS low AND amountOfWheatSeed IS med AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 6: IF amountOfWater IS low AND amountOfWheatSeed IS med AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 7: IF amountOfWater IS low AND amountOfWheatSeed IS high AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 8: IF amountOfWater IS low AND amountOfWheatSeed IS high AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 9: IF amountOfWater IS low AND amountOfWheatSeed IS high AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 10: IF amountOfWater IS low AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 11: IF amountOfWater IS low AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS med THEN resultingWheat IS low;
+    RULE 12: IF amountOfWater IS low AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+
+    RULE 13: IF amountOfWater IS med AND amountOfWheatSeed IS low AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 14: IF amountOfWater IS med AND amountOfWheatSeed IS low AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 15: IF amountOfWater IS med AND amountOfWheatSeed IS low AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 16: IF amountOfWater IS med AND amountOfWheatSeed IS med AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 17: IF amountOfWater IS med AND amountOfWheatSeed IS med AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 18: IF amountOfWater IS med AND amountOfWheatSeed IS med AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 19: IF amountOfWater IS med AND amountOfWheatSeed IS high AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 20: IF amountOfWater IS med AND amountOfWheatSeed IS high AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 21: IF amountOfWater IS med AND amountOfWheatSeed IS high AND amountOfSunnyHours IS high THEN resultingWheat IS high;
+
+    RULE 22: IF amountOfWater IS med AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 23: IF amountOfWater IS med AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 24: IF amountOfWater IS med AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+
+    RULE 25: IF amountOfWater IS high AND amountOfWheatSeed IS low AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 26: IF amountOfWater IS high AND amountOfWheatSeed IS low AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 27: IF amountOfWater IS high AND amountOfWheatSeed IS low AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 28: IF amountOfWater IS high AND amountOfWheatSeed IS med AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 29: IF amountOfWater IS high AND amountOfWheatSeed IS med AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 30: IF amountOfWater IS high AND amountOfWheatSeed IS med AND amountOfSunnyHours IS high THEN resultingWheat IS high;
+
+    RULE 31: IF amountOfWater IS high AND amountOfWheatSeed IS high AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 32: IF amountOfWater IS high AND amountOfWheatSeed IS high AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 33: IF amountOfWater IS high AND amountOfWheatSeed IS high AND amountOfSunnyHours IS high THEN resultingWheat IS high;
+
+    RULE 34: IF amountOfWater IS high AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 35: IF amountOfWater IS high AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS med THEN resultingWheat IS high;
+    RULE 36: IF amountOfWater IS high AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS high THEN resultingWheat IS veryHigh;
+
+    RULE 37: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS low AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 38: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS low AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 39: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS low AND amountOfSunnyHours IS high THEN resultingWheat IS med;
+
+    RULE 40: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS med AND amountOfSunnyHours IS low THEN resultingWheat IS low;
+    RULE 41: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS med AND amountOfSunnyHours IS med THEN resultingWheat IS med;
+    RULE 42: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS med AND amountOfSunnyHours IS high THEN resultingWheat IS high;
+
+    RULE 43: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS high AND amountOfSunnyHours IS low THEN resultingWheat IS med;
+    RULE 44: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS high AND amountOfSunnyHours IS med THEN resultingWheat IS high;
+    RULE 45: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS high AND amountOfSunnyHours IS high THEN resultingWheat IS veryHigh;
+
+    RULE 46: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS low THEN resultingWheat IS med;
+    RULE 47: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS med THEN resultingWheat IS veryHigh;
+    RULE 48: IF amountOfWater IS veryHigh AND amountOfWheatSeed IS veryHigh AND amountOfSunnyHours IS high THEN resultingWheat IS veryHigh;
+
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
